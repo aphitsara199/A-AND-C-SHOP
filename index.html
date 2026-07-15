@@ -4476,7 +4476,10 @@
 
     function refreshMonthPicker() {
       const current = $("month-picker").value || monthKey();
-      const keys = [...new Set([monthKey(), ...history.map(item => item.monthKey)])].sort().reverse();
+      // The monthly history selector must also include months found in the
+      // uploaded sales ledger. Previously it only read weekly snapshots, so a
+      // fully uploaded older month could exist in reports but be absent here.
+      const keys = monthlyProductsMonthKeys();
       $("month-picker").innerHTML = keys.map(key => `<option value="${key}">${thaiMonthLabel(key)}</option>`).join("");
       $("month-picker").value = keys.includes(current) ? current : keys[0];
       refreshMonthlyProductsMonthPicker();
